@@ -58,6 +58,11 @@ function App() {
         });
     }
 
+    const deleteNote = (event, noteId) => {
+        event.stopPropagation()
+        // Your code here
+    }
+
     function findCurrentNote() {
         return (
             notes.find((note) => {
