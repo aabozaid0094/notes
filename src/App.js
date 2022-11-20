@@ -45,13 +45,13 @@ function App() {
 
     function updateNote(text) {
         setNotes((oldNotes) => {
-            const orderedNotes = []
+            const orderedNotes = [];
             for (let index = 0; index < oldNotes.length; index++) {
                 const oldNote = oldNotes[index];
                 if (oldNote.id === currentNoteId) {
-                    orderedNotes.unshift({...oldNote, body:text})
+                    orderedNotes.unshift({ ...oldNote, body: text });
                 } else {
-                    orderedNotes.push(oldNote)
+                    orderedNotes.push(oldNote);
                 }
             }
             return orderedNotes;
@@ -59,9 +59,9 @@ function App() {
     }
 
     const deleteNote = (event, noteId) => {
-        event.stopPropagation()
-        // Your code here
-    }
+        event.stopPropagation();
+        setNotes(oldNotes => oldNotes.filter((oldNote)=>oldNote.id!==noteId) );
+    };
 
     function findCurrentNote() {
         return (
@@ -83,6 +83,7 @@ function App() {
                         currentNote={findCurrentNote()}
                         setCurrentNoteId={setCurrentNoteId}
                         newNote={createNewNote}
+                        deleteNote={deleteNote}
                     />
                     {currentNoteId && notes.length > 0 && (
                         <Editor
