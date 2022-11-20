@@ -6,31 +6,32 @@ import Split from "react-split";
 import { nanoid } from "nanoid";
 import "./App.css";
 
-const NOTES_LOCAL_KEY = "notes_local_key"
+const NOTES_LOCAL_KEY = "notes_local_key";
 
 function App() {
     const saveNotesToLocal = (notes) => {
         try {
-            localStorage.setItem(NOTES_LOCAL_KEY, JSON.stringify(notes))
+            localStorage.setItem(NOTES_LOCAL_KEY, JSON.stringify(notes));
         } catch (error) {
+            console.log(error);
             return false;
         }
     };
 
     const getNotesFromLocal = () => {
-        return JSON.parse(localStorage.getItem(NOTES_LOCAL_KEY))
+        return JSON.parse(localStorage.getItem(NOTES_LOCAL_KEY));
     };
-    
+
     // States
-    const [notes, setNotes] = React.useState(getNotesFromLocal()||[]);
+    const [notes, setNotes] = React.useState(getNotesFromLocal() || []);
     const [currentNoteId, setCurrentNoteId] = React.useState(
         (notes[0] && notes[0].id) || ""
     );
 
     // Effects
-    useEffect(()=>{
+    useEffect(() => {
         saveNotesToLocal(notes);
-    },[notes])
+    }, [notes]);
 
     // Handles
     function createNewNote() {
@@ -43,13 +44,18 @@ function App() {
     }
 
     function updateNote(text) {
-        setNotes((oldNotes) =>
-            oldNotes.map((oldNote) => {
-                return oldNote.id === currentNoteId
-                    ? { ...oldNote, body: text }
-                    : oldNote;
-            })
-        );
+        setNotes((oldNotes) => {
+            const orderedNotes = []
+            for (let index = 0; index < oldNotes.length; index++) {
+                const oldNote = oldNotes[index];
+                if (oldNote.id === currentNoteId) {
+                    orderedNotes.unshift({...oldNote, body:text})
+                } else {
+                    orderedNotes.push(oldNote)
+                }
+            }
+            return orderedNotes;
+        });
     }
 
     function findCurrentNote() {
